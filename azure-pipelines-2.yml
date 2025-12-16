@@ -1,0 +1,34 @@
+trigger: none
+
+pool: agent-ka-gang
+
+steps:
+- task: TerraformTask@5
+  displayName: Terraform init
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'tondu-connect'
+    backendAzureRmStorageAccountName: '1week'
+    backendAzureRmContainerName: 'tondu'
+    backendAzureRmKey: 'terraform.tfstate'
+
+- task: TerraformTask@5
+  displayName: Terraform Validate
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+
+- task: TerraformTask@5
+  displayName: Terraform Plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: 'tondu-connect'
+
+- task: TerraformTask@5
+  displayName: Terraform Apply
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    environmentServiceNameAzureRM: 'tondu-connect'
