@@ -1,0 +1,48 @@
+trigger: none
+
+pool: agent-ka-gang
+
+variables:
+  - group: secure-vars
+
+steps:
+- task: PowerShell@2
+  displayName: Azure Login
+  inputs:
+    targetType: 'inline'
+    script: |
+      az login --service-principal -u $(client-id) -p $(secret) --tenant $(tenant-id)
+      az account set --subscription $(sub-id)
+
+- task: PowerShell@2
+  displayName: Terraform Init
+  inputs:
+    targetType: 'inline'
+    script: 'terraform init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+- task: PowerShell@2
+  displayName: Terraform Validate
+  inputs:
+    targetType: 'inline'
+    script: 'terraform validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+- task: PowerShell@2
+  displayName: Terraform Plan
+  inputs:
+    targetType: 'inline'
+    script: 'terraform plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+- task: PowerShell@2
+  displayName: Terraform apply
+  inputs:
+    targetType: 'inline'
+    script: 'terraform apply --auto-approve'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+
+
+
+
